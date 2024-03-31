@@ -72,9 +72,28 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "@/store/userConfigSlice";
+import { useEffect } from "react";
+import { IRootState } from "@/store";
 
 function Home() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const userConfig = useSelector((state: IRootState) => state.userConfig);
+
+  useEffect(() => {
+    if (Object.keys(userConfig.user).length === 0) {
+      navigate("/");
+    }
+  }, [dispatch, userConfig, navigate]);
+
+  function logoutUser() {
+    dispatch(setUser({}));
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -130,13 +149,13 @@ function Home() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <NavLink
-                  to="/"
+                <button
+                  onClick={() => logoutUser()}
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <LogOutIcon className="h-5 w-5" />
                   <span className="sr-only">Logout</span>
-                </NavLink>
+                </button>
               </TooltipTrigger>
               <TooltipContent side="right">Logout</TooltipContent>
             </Tooltip>
@@ -249,7 +268,7 @@ function Home() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <NavLink to="/">Logout</NavLink>
+                <button onClick={() => logoutUser()}>Logout</button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

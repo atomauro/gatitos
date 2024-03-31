@@ -278,16 +278,12 @@ function Profile() {
                   <div className="font-semibold">User Details</div>
                   <ul className="grid gap-3">
                     <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Glimmer Lamps x <span>2</span>
-                      </span>
-                      <span>$250.00</span>
+                      <span className="text-muted-foreground">Full Name</span>
+                      <span>Mauricio Henao</span>
                     </li>
                     <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Aqua Filters x <span>1</span>
-                      </span>
-                      <span>$49.00</span>
+                      <span className="text-muted-foreground">Username</span>
+                      <span>@atomauro</span>
                     </li>
                   </ul>
                 </div>

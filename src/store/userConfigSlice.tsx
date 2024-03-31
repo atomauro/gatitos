@@ -13,6 +13,7 @@ const userConfigSlice = createSlice({
       state.user = payload;
     },
     resetUser(state) {
+      console.log("RESETING");
       state.user = initialState.user;
     },
     setGatitosFavorites(state, { payload }) {
