@@ -1,7 +1,8 @@
+import { UserInformation } from "@/models/models";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: {},
+  user: {} as UserInformation,
   gatitosFavoriteList: [],
 };
 

@@ -10,6 +10,17 @@ import { setUser } from "@/store/userConfigSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
 import { useEffect } from "react";
+import { UserInformation } from "@/models/models";
+import {
+  generateRandomAddress,
+  generateRandomCardNumber,
+  generateRandomCity,
+  generateRandomFullName,
+  generateRandomPhoneNumber,
+  generateRandomState,
+  generateRandomUsername,
+  generateRandomZipCode,
+} from "./randomDataGenerator";
 
 const optionsNyanCatAnimation = {
   loop: true,
@@ -30,8 +41,45 @@ function Signin() {
     }
   }, [dispatch, userConfig, navigate]);
 
-  const userSignIn = (values: { username: string; password: string }) => {
-    dispatch(setUser(values));
+  // Simulación de datos de usuario
+  const generateRandomUserData = (email: string) => {
+    const randomUserId = Math.random().toString(36).substring(7);
+    const randomDate = new Date().toDateString();
+
+    // Simulación de detalles del usuario
+    const userDetails = {
+      fullName: generateRandomFullName(),
+      username: generateRandomUsername(),
+      shippingInformation: {
+        fullName: generateRandomFullName(),
+        address: generateRandomAddress(),
+        city: generateRandomCity(),
+        state: generateRandomState(),
+        zipCode: generateRandomZipCode(),
+      },
+      billingInformation: "Same as shipping address",
+      customerInformation: {
+        customer: generateRandomFullName(),
+        email: email,
+        phone: generateRandomPhoneNumber(),
+      },
+      paymentInformation: {
+        method: "Visa",
+        cardNumber: generateRandomCardNumber(),
+      },
+    };
+
+    return {
+      userId: randomUserId,
+      date: randomDate,
+      userDetails: userDetails,
+    };
+  };
+
+  // Función de inicio de sesión
+  const userSignIn = (email: string) => {
+    const userData = generateRandomUserData(email);
+    dispatch(setUser(userData));
   };
 
   return (
@@ -47,7 +95,7 @@ function Signin() {
       })}
       onSubmit={(values) => {
         console.log(values);
-        userSignIn(values);
+        userSignIn(values.email);
       }}
     >
       {({ handleSubmit, handleChange, values, errors }) => (

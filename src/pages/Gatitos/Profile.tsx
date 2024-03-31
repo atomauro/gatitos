@@ -83,12 +83,13 @@ function Profile() {
   const navigate = useNavigate();
 
   const userConfig = useSelector((state: IRootState) => state.userConfig);
+  const user = useSelector((state: IRootState) => state.userConfig.user);
 
   useEffect(() => {
     if (Object.keys(userConfig.user).length === 0) {
       navigate("/");
     }
-  }, [dispatch, userConfig, navigate]);
+  }, [dispatch, userConfig, navigate, user]);
 
   function logoutUser() {
     dispatch(resetUser());
@@ -279,7 +280,7 @@ function Profile() {
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
-                    User ID: Oe31b70H
+                    User ID: {user.userId}
                     <Button
                       size="icon"
                       variant="outline"
@@ -289,7 +290,7 @@ function Profile() {
                       <span className="sr-only">Copy User ID</span>
                     </Button>
                   </CardTitle>
-                  <CardDescription>Date: November 23, 2023</CardDescription>
+                  <CardDescription>Date: {user.date}</CardDescription>
                 </div>
               </CardHeader>
               <CardContent className="p-6 text-sm">
@@ -298,11 +299,11 @@ function Profile() {
                   <ul className="grid gap-3">
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">Full Name</span>
-                      <span>Mauricio Henao</span>
+                      <span>{user.userDetails?.fullName ?? ""}</span>
                     </li>
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">Username</span>
-                      <span>@atomauro</span>
+                      <span>{user.userDetails?.username ?? ""}</span>
                     </li>
                   </ul>
                 </div>
@@ -311,15 +312,23 @@ function Profile() {
                   <div className="grid gap-3">
                     <div className="font-semibold">Shipping Information</div>
                     <address className="grid gap-0.5 not-italic text-muted-foreground">
-                      <span>Liam Johnson</span>
-                      <span>1234 Main St.</span>
-                      <span>Anytown, CA 12345</span>
+                      <span>
+                        {user.userDetails?.shippingInformation?.fullName ?? ""}
+                      </span>
+                      <span>
+                        {user.userDetails?.shippingInformation?.address ?? ""}
+                      </span>
+                      <span>
+                        {user.userDetails?.shippingInformation?.city ?? ""},{" "}
+                        {user.userDetails?.shippingInformation?.state ?? ""}{" "}
+                        {user.userDetails?.shippingInformation?.zipCode ?? ""}
+                      </span>
                     </address>
                   </div>
                   <div className="grid auto-rows-max gap-3">
                     <div className="font-semibold">Billing Information</div>
                     <div className="text-muted-foreground">
-                      Same as shipping address
+                      {user.userDetails?.billingInformation ?? ""}
                     </div>
                   </div>
                 </div>
@@ -329,18 +338,32 @@ function Profile() {
                   <dl className="grid gap-3">
                     <div className="flex items-center justify-between">
                       <dt className="text-muted-foreground">Customer</dt>
-                      <dd>Liam Johnson</dd>
+                      <dd>
+                        {user.userDetails?.customerInformation?.customer ?? ""}
+                      </dd>
                     </div>
                     <div className="flex items-center justify-between">
                       <dt className="text-muted-foreground">Email</dt>
                       <dd>
-                        <a href="mailto:">liam@acme.com</a>
+                        <a
+                          href={`mailto:${
+                            user.userDetails?.customerInformation?.email ?? ""
+                          }`}
+                        >
+                          {user.userDetails?.customerInformation?.email ?? ""}
+                        </a>
                       </dd>
                     </div>
                     <div className="flex items-center justify-between">
                       <dt className="text-muted-foreground">Phone</dt>
                       <dd>
-                        <a href="tel:">+1 234 567 890</a>
+                        <a
+                          href={`tel:${
+                            user.userDetails?.customerInformation?.phone ?? ""
+                          }`}
+                        >
+                          {user.userDetails?.customerInformation?.phone ?? ""}
+                        </a>
                       </dd>
                     </div>
                   </dl>
@@ -352,9 +375,11 @@ function Profile() {
                     <div className="flex items-center justify-between">
                       <dt className="flex items-center gap-1 text-muted-foreground">
                         <CreditCard className="h-4 w-4" />
-                        Visa
+                        {user.userDetails?.paymentInformation?.method ?? ""}
                       </dt>
-                      <dd>**** **** **** 4532</dd>
+                      <dd>
+                        {user.userDetails?.paymentInformation?.cardNumber ?? ""}
+                      </dd>
                     </div>
                   </dl>
                 </div>

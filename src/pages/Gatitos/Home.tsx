@@ -75,11 +75,11 @@ import {
 } from "@/components/ui/tooltip";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { resetUser } from "@/store/userConfigSlice";
+import { resetAllGatitosFavorites, resetUser } from "@/store/userConfigSlice";
 import { useEffect } from "react";
 import { IRootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
-import { setGatitos } from "@/store/gatitosConfigSlice";
+import { resetAllGatitos, setGatitos } from "@/store/gatitosConfigSlice";
 import { Gatito } from "@/models/models";
 
 async function fetchGatitos() {
@@ -123,6 +123,8 @@ function Home() {
   }, [dispatch, userConfig, navigate]);
 
   function logoutUser() {
+    dispatch(resetAllGatitosFavorites());
+    dispatch(resetAllGatitos());
     dispatch(resetUser());
   }
 
