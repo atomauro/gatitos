@@ -17,6 +17,7 @@ import {
   Search,
   Settings,
   ShoppingCart,
+  SmileIcon,
   Truck,
   User,
   Users2,
@@ -73,17 +74,33 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { resetUser } from "@/store/userConfigSlice";
+import { Gatito } from "@/models/models";
 
 function Detail() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [currentGatito, setCurrentGatito] = useState<Gatito>();
 
   const userConfig = useSelector((state: IRootState) => state.userConfig);
+  const gatitosList = useSelector(
+    (state: IRootState) => state.gatitosConfig?.gatitosList
+  );
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (gatitosList && gatitosList.length > 0 && id) {
+      const foundGatito = gatitosList.find(
+        (gatito: Gatito) => gatito.id === id
+      );
+      setCurrentGatito(foundGatito);
+    }
+  }, [id, gatitosList]);
 
   useEffect(() => {
     if (Object.keys(userConfig.user).length === 0) {
@@ -185,33 +202,20 @@ function Detail() {
                   <span className="sr-only">Acme Inc</span>
                 </NavLink>
                 <NavLink
-                  to="#"
+                  to="/gatitos"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <HomeIcon className="h-5 w-5" />
                   Dashboard
                 </NavLink>
                 <NavLink
-                  to="#"
+                  to="/gatitos"
                   className="flex items-center gap-4 px-2.5 text-foreground"
                 >
-                  <ShoppingCart className="h-5 w-5" />
+                  <CatIcon className="h-5 w-5" />
                   Gatitos
                 </NavLink>
-                <NavLink
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </NavLink>
-                <NavLink
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </NavLink>
+
                 <NavLink
                   to="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -226,13 +230,13 @@ function Detail() {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <NavLink to="#">Dashboard</NavLink>
+                  <NavLink to="/gatitos">Dashboard</NavLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <NavLink to="#">Gatitos</NavLink>
+                  <NavLink to="/gatitos">Gatitos</NavLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -257,7 +261,7 @@ function Detail() {
                 className="overflow-hidden rounded-full"
               >
                 <img
-                  src="/placeholder-user.webp"
+                  src={"/placeholder-user.webp"}
                   style={{ width: "36px", height: "36" }}
                   alt="Avatar"
                   className="overflow-hidden"
@@ -285,8 +289,8 @@ function Detail() {
                 <CardContent>
                   <div className="flex items-center justify-center">
                     <img
-                      src="/placeholder-user.webp"
-                      style={{ width: "20rem" }}
+                      src={currentGatito?.url}
+                      style={{ width: "30rem" }}
                       alt="Cat"
                     />
                   </div>
@@ -296,7 +300,7 @@ function Detail() {
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               <Card className="sm:col-span-2">
                 <CardHeader className="pb-5">
-                  <CardTitle>Gatito Name</CardTitle>
+                  <CardTitle>Random Gatito Breed: </CardTitle>
                   <CardDescription className="max-w-lg text-balance leading-relaxed">
                     Introducing Gatitos App by{" "}
                   </CardDescription>
@@ -337,72 +341,19 @@ function Detail() {
                 </div>
                 <div className="ml-auto flex items-center gap-1">
                   <Button size="sm" variant="outline" className="h-8 gap-1">
-                    <Truck className="h-3.5 w-3.5" />
+                    <SmileIcon className="h-3.5 w-3.5" />
                     <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                      Track Order
+                      Get Fun Fact
                     </span>
                   </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="outline" className="h-8 w-8">
-                        <MoreVertical className="h-3.5 w-3.5" />
-                        <span className="sr-only">More</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Export</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Trash</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </div>
               </CardHeader>
               <CardContent className="p-6 text-sm">
-                <div className="grid gap-3">
-                  <div className="font-semibold">Order Details</div>
-                  <ul className="grid gap-3">
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Glimmer Lamps x <span>2</span>
-                      </span>
-                      <span>$250.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Aqua Filters x <span>1</span>
-                      </span>
-                      <span>$49.00</span>
-                    </li>
-                  </ul>
-                  <Separator className="my-2" />
-                  <ul className="grid gap-3">
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Subtotal</span>
-                      <span>$299.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Shipping</span>
-                      <span>$5.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Tax</span>
-                      <span>$25.00</span>
-                    </li>
-                    <li className="flex items-center justify-between font-semibold">
-                      <span className="text-muted-foreground">Total</span>
-                      <span>$329.00</span>
-                    </li>
-                  </ul>
-                </div>
-                <Separator className="my-4" />
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-3">
                     <div className="font-semibold">Shipping Information</div>
                     <address className="grid gap-0.5 not-italic text-muted-foreground">
                       <span>Liam Johnson</span>
-                      <span>1234 Main St.</span>
-                      <span>Anytown, CA 12345</span>
                     </address>
                   </div>
                   <div className="grid auto-rows-max gap-3">
@@ -434,41 +385,8 @@ function Detail() {
                     </div>
                   </dl>
                 </div>
-                <Separator className="my-4" />
-                <div className="grid gap-3">
-                  <div className="font-semibold">Payment Information</div>
-                  <dl className="grid gap-3">
-                    <div className="flex items-center justify-between">
-                      <dt className="flex items-center gap-1 text-muted-foreground">
-                        <CreditCard className="h-4 w-4" />
-                        Visa
-                      </dt>
-                      <dd>**** **** **** 4532</dd>
-                    </div>
-                  </dl>
-                </div>
               </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Updated <time dateTime="2023-11-23">November 23, 2023</time>
-                </div>
-                <Pagination className="ml-auto mr-0 w-auto">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                        <span className="sr-only">Previous Order</span>
-                      </Button>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronRight className="h-3.5 w-3.5" />
-                        <span className="sr-only">Next Order</span>
-                      </Button>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </CardFooter>
+              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3"></CardFooter>
             </Card>
           </div>
         </main>

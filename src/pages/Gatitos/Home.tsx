@@ -73,6 +73,15 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resetAllGatitosFavorites, resetUser } from "@/store/userConfigSlice";
@@ -83,8 +92,11 @@ import { resetAllGatitos, setGatitos } from "@/store/gatitosConfigSlice";
 import { Gatito } from "@/models/models";
 
 async function fetchGatitos() {
-  const res = await fetch(
+  /* const res = await fetch(
     `https://api.thecatapi.com/v1/images/search?limit=10`
+  ); */
+  const res = await fetch(
+    `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=snow&has_breeds=1&api_key=live_5NT3qKutuYHwqiJmClOdrFVPop1v3RoegsxpWZTGVe1YwNdfJKHoYhNOLlIRecMC`
   );
   if (!res.ok) {
     throw new Error("Network response was not ok");
@@ -225,7 +237,7 @@ function Home() {
                   to="#"
                   className="flex items-center gap-4 px-2.5 text-foreground"
                 >
-                  <ShoppingCart className="h-5 w-5" />
+                  <CatIcon className="h-5 w-5" />
                   Gatitos
                 </NavLink>
                 <NavLink
@@ -348,31 +360,126 @@ function Home() {
                   <TabsTrigger value="favorites">Your Favorites</TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-7 gap-1 text-sm"
-                      >
-                        <ListFilter className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only">Filter</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked>
-                        Fulfilled
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Declined
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Refunded
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Select>
+                    <span>Available Breeds: </span>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a breed" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="abyssinian">Abyssinian</SelectItem>
+                        <SelectItem value="aegean">Aegean</SelectItem>
+                        <SelectItem value="americanbobtail">
+                          American Bobtail
+                        </SelectItem>
+                        <SelectItem value="americancurl">
+                          American Curl
+                        </SelectItem>
+                        <SelectItem value="americanshorthair">
+                          American Shorthair
+                        </SelectItem>
+                        <SelectItem value="americanwirehair">
+                          American Wirehair
+                        </SelectItem>
+                        <SelectItem value="arabianmau">Arabian Mau</SelectItem>
+                        <SelectItem value="australianmist">
+                          Australian Mist
+                        </SelectItem>
+                        <SelectItem value="balinese">Balinese</SelectItem>
+                        <SelectItem value="bambino">Bambino</SelectItem>
+                        <SelectItem value="bengal">Bengal</SelectItem>
+                        <SelectItem value="birman">Birman</SelectItem>
+                        <SelectItem value="bombay">Bombay</SelectItem>
+                        <SelectItem value="britishlonghair">
+                          British Longhair
+                        </SelectItem>
+                        <SelectItem value="britishshorthair">
+                          British Shorthair
+                        </SelectItem>
+                        <SelectItem value="burmese">Burmese</SelectItem>
+                        <SelectItem value="burmilla">Burmilla</SelectItem>
+                        <SelectItem value="californiaspangled">
+                          California Spangled
+                        </SelectItem>
+                        <SelectItem value="chantillytiffany">
+                          Chantilly-Tiffany
+                        </SelectItem>
+                        <SelectItem value="chartreux">Chartreux</SelectItem>
+                        <SelectItem value="chausie">Chausie</SelectItem>
+                        <SelectItem value="cheetoh">Cheetoh</SelectItem>
+                        <SelectItem value="colorpointshorthair">
+                          Colorpoint Shorthair
+                        </SelectItem>
+                        <SelectItem value="cornishrex">Cornish Rex</SelectItem>
+                        <SelectItem value="cymric">Cymric</SelectItem>
+                        <SelectItem value="cyprus">Cyprus</SelectItem>
+                        <SelectItem value="devonrex">Devon Rex</SelectItem>
+                        <SelectItem value="donskoy">Donskoy</SelectItem>
+                        <SelectItem value="dragonli">Dragon Li</SelectItem>
+                        <SelectItem value="egyptianmau">
+                          Egyptian Mau
+                        </SelectItem>
+                        <SelectItem value="europeanburmese">
+                          European Burmese
+                        </SelectItem>
+                        <SelectItem value="exoticshorthair">
+                          Exotic Shorthair
+                        </SelectItem>
+                        <SelectItem value="havanabrown">
+                          Havana Brown
+                        </SelectItem>
+                        <SelectItem value="himalayan">Himalayan</SelectItem>
+                        <SelectItem value="japanesebobtail">
+                          Japanese Bobtail
+                        </SelectItem>
+                        <SelectItem value="javanese">Javanese</SelectItem>
+                        <SelectItem value="khaomanee">Khao Manee</SelectItem>
+                        <SelectItem value="korat">Korat</SelectItem>
+                        <SelectItem value="kurilian">Kurilian</SelectItem>
+                        <SelectItem value="laperm">LaPerm</SelectItem>
+                        <SelectItem value="mainecoon">Maine Coon</SelectItem>
+                        <SelectItem value="malayan">Malayan</SelectItem>
+                        <SelectItem value="manx">Manx</SelectItem>
+                        <SelectItem value="munchkin">Munchkin</SelectItem>
+                        <SelectItem value="nebelung">Nebelung</SelectItem>
+                        <SelectItem value="norwegianforestcat">
+                          Norwegian Forest Cat
+                        </SelectItem>
+                        <SelectItem value="ocicat">Ocicat</SelectItem>
+                        <SelectItem value="oriental">Oriental</SelectItem>
+                        <SelectItem value="persian">Persian</SelectItem>
+                        <SelectItem value="pixiebob">Pixie-bob</SelectItem>
+                        <SelectItem value="ragamuffin">Ragamuffin</SelectItem>
+                        <SelectItem value="ragdoll">Ragdoll</SelectItem>
+                        <SelectItem value="russianblue">
+                          Russian Blue
+                        </SelectItem>
+                        <SelectItem value="savannah">Savannah</SelectItem>
+                        <SelectItem value="scottishfold">
+                          Scottish Fold
+                        </SelectItem>
+                        <SelectItem value="selkirkrex">Selkirk Rex</SelectItem>
+                        <SelectItem value="siamese">Siamese</SelectItem>
+                        <SelectItem value="siberian">Siberian</SelectItem>
+                        <SelectItem value="singapura">Singapura</SelectItem>
+                        <SelectItem value="snowshoe">Snowshoe</SelectItem>
+                        <SelectItem value="somali">Somali</SelectItem>
+                        <SelectItem value="sphynx">Sphynx</SelectItem>
+                        <SelectItem value="tonkinese">Tonkinese</SelectItem>
+                        <SelectItem value="toyger">Toyger</SelectItem>
+                        <SelectItem value="turkishangora">
+                          Turkish Angora
+                        </SelectItem>
+                        <SelectItem value="turkishvan">Turkish Van</SelectItem>
+                        <SelectItem value="yorkchocolate">
+                          York Chocolate
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="ml-auto flex items-center gap-2">
+                  <Button>Get New Gatitos!</Button>
                 </div>
               </div>
               <TabsContent value="all">
@@ -380,7 +487,8 @@ function Home() {
                   <CardHeader className="px-7">
                     <CardTitle>Gatitos</CardTitle>
                     <CardDescription>
-                      Recent Gatitos from your store.
+                      Recent Gatitos from your internet. Soon we will have memes
+                      too, stay tune!
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -402,8 +510,13 @@ function Home() {
                                     <Button
                                       variant={"default"}
                                       className=" mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                      onClick={() => {
+                                        navigate(
+                                          "/gatitos/detail/" + gatito.id
+                                        );
+                                      }}
                                     >
-                                      Ver detalle
+                                      See Details
                                     </Button>
                                     <Button
                                       variant={"secondary"}

@@ -189,32 +189,19 @@ function Profile() {
                   Dashboard
                 </NavLink>
                 <NavLink
-                  to="#"
+                  to="/gatitos"
                   className="flex items-center gap-4 px-2.5 text-foreground"
                 >
-                  <ShoppingCart className="h-5 w-5" />
+                  <CatIcon className="h-5 w-5" />
                   Gatitos
                 </NavLink>
+
                 <NavLink
                   to="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
-                  <Package className="h-5 w-5" />
-                  Products
-                </NavLink>
-                <NavLink
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </NavLink>
-                <NavLink
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
+                  <LogOutIcon className="h-5 w-5" />
+                  Logout
                 </NavLink>
               </nav>
             </SheetContent>
@@ -386,7 +373,7 @@ function Profile() {
               </CardContent>
               <CardFooter className="flex flex-row items-center bUser-t bg-muted/50 px-6 py-3">
                 <div className="text-xs text-muted-foreground">
-                  Updated <time dateTime="2023-11-23">November 23, 2023</time>
+                  Updated <time dateTime="2023-11-23">April, 2024</time>
                 </div>
               </CardFooter>
             </Card>
