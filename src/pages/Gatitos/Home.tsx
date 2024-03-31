@@ -74,15 +74,35 @@ import {
 } from "@/components/ui/tooltip";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/store/userConfigSlice";
+import { resetUser } from "@/store/userConfigSlice";
 import { useEffect } from "react";
 import { IRootState } from "@/store";
+import { useQuery } from "@tanstack/react-query";
+
+async function fetchGatitos() {
+  const res = await fetch(
+    `https://api.thecatapi.com/v1/images/search?limit=10?api_key=live_5NT3qKutuYHwqiJmClOdrFVPop1v3RoegsxpWZTGVe1YwNdfJKHoYhNOLlIRecMC`
+  );
+  if (!res.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return res.json();
+}
 
 function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const userConfig = useSelector((state: IRootState) => state.userConfig);
+
+  const { data, status } = useQuery({
+    queryKey: ["gatitos"],
+    queryFn: fetchGatitos,
+  });
+
+  useEffect(() => {
+    console.log("RQ", { data, status });
+  }, [data, status]);
 
   useEffect(() => {
     if (Object.keys(userConfig.user).length === 0) {
@@ -91,7 +111,7 @@ function Home() {
   }, [dispatch, userConfig, navigate]);
 
   function logoutUser() {
-    dispatch(setUser({}));
+    dispatch(resetUser());
   }
 
   return (
