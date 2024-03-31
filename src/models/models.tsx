@@ -1,4 +1,4 @@
-export interface Cat {
+export interface Gatito {
   id: string;
   width: number;
   height: number;

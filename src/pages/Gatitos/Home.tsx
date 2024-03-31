@@ -5,6 +5,7 @@ import {
   Copy,
   CreditCard,
   File,
+  Heart,
   Home as HomeIcon,
   LineChart,
   ListFilter,
@@ -78,10 +79,12 @@ import { resetUser } from "@/store/userConfigSlice";
 import { useEffect } from "react";
 import { IRootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
+import { setGatitos } from "@/store/gatitosConfigSlice";
+import { Gatito } from "@/models/models";
 
 async function fetchGatitos() {
   const res = await fetch(
-    `https://api.thecatapi.com/v1/images/search?limit=10?api_key=live_5NT3qKutuYHwqiJmClOdrFVPop1v3RoegsxpWZTGVe1YwNdfJKHoYhNOLlIRecMC`
+    `https://api.thecatapi.com/v1/images/search?limit=10`
   );
   if (!res.ok) {
     throw new Error("Network response was not ok");
@@ -94,6 +97,10 @@ function Home() {
   const navigate = useNavigate();
 
   const userConfig = useSelector((state: IRootState) => state.userConfig);
+  const gatitosConfig = useSelector((state: IRootState) => state.gatitosConfig);
+  const gatitosList = useSelector(
+    (state: IRootState) => state.gatitosConfig.gatitosList
+  );
 
   const { data, status } = useQuery({
     queryKey: ["gatitos"],
@@ -102,6 +109,11 @@ function Home() {
 
   useEffect(() => {
     console.log("RQ", { data, status });
+    if (data && status === "success") {
+      if (data.length > 0) {
+        dispatch(setGatitos(data));
+      }
+    }
   }, [data, status]);
 
   useEffect(() => {
@@ -315,7 +327,9 @@ function Home() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardDescription>All Beauties</CardDescription>
-                  <CardTitle className="text-4xl">0</CardTitle>
+                  <CardTitle className="text-4xl">
+                    {gatitosList.length}
+                  </CardTitle>
                 </CardHeader>
               </Card>
               <Card>
@@ -368,45 +382,41 @@ function Home() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {/*  <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Customer</TableHead>
-                          <TableHead className="hidden sm:table-cell">
-                            Type
-                          </TableHead>
-                          <TableHead className="hidden sm:table-cell">
-                            Status
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Date
-                          </TableHead>
-                          <TableHead className="text-right">Amount</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Olivia Smith</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              olivia@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Refund
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="outline">
-                              Declined
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-24
-                          </TableCell>
-                          <TableCell className="text-right">$150.00</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table> */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {gatitosList.length > 0
+                        ? gatitosList.map((gatito: Gatito) => {
+                            return (
+                              <Card
+                                className="relative group overflow-hidden transform transition-transform duration-300 hover:scale-125 hover:shadow-2lg"
+                                key={gatito.id}
+                              >
+                                <CardContent className="group-hover:opacity-75 relative">
+                                  <img
+                                    src={gatito.url}
+                                    alt="Gatito"
+                                    className="block w-full h-48 object-cover"
+                                  />
+                                  <div className="absolute bottom-4 ">
+                                    <Button
+                                      variant={"default"}
+                                      className=" mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                    >
+                                      Ver detalle
+                                    </Button>
+                                    <Button
+                                      variant={"secondary"}
+                                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                    >
+                                      Add to favorites{" "}
+                                      <Heart className="h-6 w-6" />
+                                    </Button>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            );
+                          })
+                        : null}
+                    </div>
                   </CardContent>
                   <CardFooter>
                     <Pagination className="ml-auto mr-0 w-auto">
