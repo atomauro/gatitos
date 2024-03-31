@@ -4,6 +4,7 @@ import Signin from "@/pages/Authentication/Signin";
 // Application pages
 import Detail from "@/pages/Gatitos/Detail";
 import Home from "../pages/Gatitos/Home";
+import Profile from "@/pages/Gatitos/Profile";
 
 const routes = [
   // signin
@@ -19,6 +20,10 @@ const routes = [
   {
     path: "/gatitos/detail",
     element: <Detail />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
 ];
 
