@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NavLink } from "react-router-dom";
 
-export function Signin() {
+function Signin() {
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
       <div className="flex items-center justify-center py-12">
@@ -45,9 +45,9 @@ export function Signin() {
           </div>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="#" className="underline">
+            <NavLink to="#" className="underline">
               Sign up
-            </Link>
+            </NavLink>
           </div>
         </div>
       </div>
@@ -61,3 +61,5 @@ export function Signin() {
     </div>
   );
 }
+
+export default Signin;
