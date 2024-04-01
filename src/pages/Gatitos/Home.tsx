@@ -1,17 +1,12 @@
 import {
   CatIcon,
   HeartIcon,
-  Home as HomeIcon,
   Lightbulb,
-  LineChart,
   LogOutIcon,
-  Package,
-  Package2,
   PanelLeft,
   Search,
   User,
   UserIcon,
-  Users2,
 } from "lucide-react";
 
 import {
@@ -39,7 +34,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -87,7 +81,6 @@ import {
 } from "@/components/ui/command";
 import { Separator } from "@/components/ui/separator";
 import { breedsCurrentOptions } from "@/models/Gatito/breedsCurrentOptions";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -95,10 +88,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import animationLoaderCat from "@/assets/animations/loadercat.json";
 import Lottie from "react-lottie";
+import { motion } from "framer-motion";
 
 const optionsLoaderAnimation = {
   loop: true,
@@ -111,7 +104,6 @@ function Home() {
   const navigate = useNavigate();
 
   const userConfig = useSelector((state: IRootState) => state.userConfig);
-  const gatitosConfig = useSelector((state: IRootState) => state.gatitosConfig);
   const [currentBreed, setCurrentBreed] = useState("snow");
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
@@ -528,9 +520,10 @@ function Home() {
                                 key={gatito.id}
                               >
                                 <CardContent className="group-hover:opacity-75 relative">
-                                  <img
+                                  <motion.img
                                     src={gatito.url}
-                                    alt="Gatito"
+                                    layoutId={gatito.id}
+                                    alt={gatito.url}
                                     className="block w-full h-48 object-cover"
                                   />
                                   <div className="absolute bottom-4 ">

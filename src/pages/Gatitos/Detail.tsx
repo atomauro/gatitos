@@ -2,10 +2,7 @@ import {
   ArrowLeftCircleIcon,
   CatIcon,
   Heart,
-  Home as HomeIcon,
-  LineChart,
   LogOutIcon,
-  Package2,
   PanelLeft,
   SmileIcon,
   User,
@@ -56,6 +53,7 @@ import {
 } from "@/store/userConfigSlice";
 import { Gatito } from "@/models/Gatito/Gatito";
 import { resetAllGatitos } from "@/store/gatitosConfigSlice";
+import { motion } from "framer-motion";
 
 function Detail() {
   const dispatch = useDispatch();
@@ -118,7 +116,7 @@ function Detail() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <NavLink
-                  to="#"
+                  to="/gatitos"
                   className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
                 >
                   <img
@@ -288,7 +286,8 @@ function Detail() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-center">
-                    <img
+                    <motion.img
+                      layoutId={id}
                       src={currentGatito?.url}
                       style={{ width: "30rem" }}
                       alt="Cat"
