@@ -83,7 +83,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
 import { Separator } from "@/components/ui/separator";
@@ -670,15 +669,26 @@ function Home() {
               <span>Visit website</span>
             </Button>
           </CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            <ScrollArea>
-              {breedsCurrentOptions
-                ? breedsCurrentOptions.map((breed: Breed) => {
-                    return (
-                      <CommandItem key={breed.id}>
-                        <CatIcon className="mr-2 h-4 w-4" />
-                        <span>{breed.name}</span>
-                        {/*  <Button
+          <CommandGroup heading="Suggestions | Current Options">
+            {breedsCurrentOptions
+              ? breedsCurrentOptions.map((breed: Breed) => {
+                  return (
+                    <CommandItem
+                      key={breed.name}
+                      className="flex justify-between"
+                    >
+                      <CatIcon className="mr-2 h-4 w-4" />
+                      <span>{breed.name}</span>
+                      <Button
+                        onClick={() => {
+                          setOpenSearchDialog(false);
+                          setCurrentBreed(breed.id);
+                          refetch();
+                        }}
+                      >
+                        Select
+                      </Button>
+                      {/*  <Button
                         onClick={() => {
                           setOpenSearchDialog(false);
                           setCurrentBreed(breed.id);
@@ -687,11 +697,10 @@ function Home() {
                       >
                         Select
                       </Button> */}
-                      </CommandItem>
-                    );
-                  })
-                : null}
-            </ScrollArea>
+                    </CommandItem>
+                  );
+                })
+              : null}
           </CommandGroup>
         </CommandList>
       </CommandDialog>
