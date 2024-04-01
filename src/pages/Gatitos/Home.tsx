@@ -116,9 +116,6 @@ function Home() {
   );
 
   async function fetchGatitos() {
-    /* const res = await fetch(
-      `https://api.thecatapi.com/v1/images/search?limit=10`
-    ); */
     console.log("fetchGatitos", currentBreed);
     const res = await fetch(
       `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${currentBreed}&has_breeds=1&api_key=live_5NT3qKutuYHwqiJmClOdrFVPop1v3RoegsxpWZTGVe1YwNdfJKHoYhNOLlIRecMC`
@@ -129,7 +126,7 @@ function Home() {
     return res.json();
   }
 
-  const { data, status, refetch } = useQuery({
+  const { data, status, refetch, isLoading } = useQuery({
     queryKey: ["gatitos"],
     queryFn: fetchGatitos,
   });
@@ -714,7 +711,7 @@ function Home() {
           </CommandGroup>
         </CommandList>
       </CommandDialog>
-      <AlertDialog open={status == "pending"}>
+      <AlertDialog open={isLoading}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Loading cuteness!</AlertDialogTitle>
@@ -728,7 +725,16 @@ function Home() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <span>sad</span>
+            <span>
+              Gatitos App | By{" "}
+              <a
+                href="https://www.57blocks.io"
+                target="_blank"
+                className="underline"
+              >
+                57Blocks.io
+              </a>
+            </span>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

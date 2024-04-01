@@ -54,11 +54,30 @@ import {
 import { Gatito } from "@/models/Gatito/Gatito";
 import { resetAllGatitos } from "@/store/gatitosConfigSlice";
 import { motion } from "framer-motion";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import Lottie from "react-lottie";
+import animationLoaderCat from "@/assets/animations/loadercat.json";
+import { useQuery } from "@tanstack/react-query";
+
+const optionsLoaderAnimation = {
+  loop: true,
+  autoplay: true,
+  animationData: animationLoaderCat,
+};
 
 function Detail() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [currentGatito, setCurrentGatito] = useState<Gatito>();
+  const [showFunFactDialog, setShowFunFactDialog] = useState(false);
 
   const userConfig = useSelector((state: IRootState) => state.userConfig);
   const gatitosList = useSelector(
@@ -69,6 +88,34 @@ function Detail() {
   );
 
   const { id } = useParams();
+
+  async function fetchFunFact() {
+    const res = await fetch("https://catfact.ninja/fact", {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-CSRF-TOKEN": "kgq5kWXCoNzuKPo7nSNfLSoxX2KrheWtzsZUx28S",
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await res.json();
+    console.log("Fact", data);
+    return data;
+  }
+
+  const { data, status, refetch, isLoading } = useQuery({
+    queryKey: ["funfacts"],
+    queryFn: fetchFunFact,
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (data && data.fact && status === "success") {
+      setShowFunFactDialog(true);
+    }
+  }, [data, status]);
 
   useEffect(() => {
     if (gatitosList && gatitosList.length > 0 && id) {
@@ -106,6 +153,10 @@ function Detail() {
       }
     }
     return false;
+  }
+
+  function getFunFact() {
+    console.log("sd");
   }
 
   return (
@@ -345,7 +396,14 @@ function Detail() {
                   <CardDescription>{currentGatito?.id}</CardDescription>
                 </div>
                 <div className="ml-auto flex items-center gap-1">
-                  <Button size="sm" variant="outline" className="h-8 gap-1">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8 gap-1"
+                    onClick={() => {
+                      refetch();
+                    }}
+                  >
                     <SmileIcon className="h-3.5 w-3.5" />
                     <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
                       Get Fun Fact
@@ -466,6 +524,49 @@ function Detail() {
           </div>
         </main>
       </div>
+
+      <AlertDialog open={isLoading} key={"loader"}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Loading cuteness!</AlertDialogTitle>
+            <AlertDialogDescription>
+              <Lottie
+                options={optionsLoaderAnimation}
+                speed={1}
+                width={"100%"}
+                isClickToPauseDisabled={true}
+              />
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <span>
+              Gatitos App | By{" "}
+              <a
+                href="https://www.57blocks.io"
+                target="_blank"
+                className="underline"
+              >
+                57Blocks.io
+              </a>
+            </span>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={showFunFactDialog} key={"fact"}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Fun Fact About Gatitos</AlertDialogTitle>
+            <AlertDialogDescription>
+              <span>{data && data.fact ? data.fact : ""}</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex flex-row items-center justify-center">
+            <AlertDialogAction onClick={() => setShowFunFactDialog(false)}>
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
