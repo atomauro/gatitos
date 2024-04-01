@@ -105,6 +105,7 @@ function Home() {
 
   const userConfig = useSelector((state: IRootState) => state.userConfig);
   const [currentBreed, setCurrentBreed] = useState("snow");
+  const [currentPage, setCurrentPage] = useState(0);
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
 
@@ -118,7 +119,7 @@ function Home() {
   async function fetchGatitos() {
     console.log("fetchGatitos", currentBreed);
     const res = await fetch(
-      `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${currentBreed}&has_breeds=1&api_key=live_5NT3qKutuYHwqiJmClOdrFVPop1v3RoegsxpWZTGVe1YwNdfJKHoYhNOLlIRecMC`
+      `https://api.thecatapi.com/v1/images/search?limit=20&breed_ids=${currentBreed}&page=${currentPage}&has_breeds=1&api_key=live_5NT3qKutuYHwqiJmClOdrFVPop1v3RoegsxpWZTGVe1YwNdfJKHoYhNOLlIRecMC`
     );
     if (!res.ok) {
       throw new Error("Network response was not ok");
@@ -567,11 +568,23 @@ function Home() {
                     <Pagination>
                       <PaginationContent>
                         <PaginationItem>
-                          <PaginationPrevious />
+                          <PaginationPrevious
+                            onClick={() => {
+                              if (currentPage > 0) {
+                                setCurrentPage(currentPage - 1);
+                                refetch();
+                              }
+                            }}
+                          />
                         </PaginationItem>
-
+                        <PaginationItem>{currentPage + 1}</PaginationItem>
                         <PaginationItem>
-                          <PaginationNext />
+                          <PaginationNext
+                            onClick={() => {
+                              setCurrentPage(currentPage + 1);
+                              refetch();
+                            }}
+                          />
                         </PaginationItem>
                       </PaginationContent>
                     </Pagination>
@@ -641,19 +654,7 @@ function Home() {
                         : null}
                     </div>
                   </CardContent>
-                  <CardFooter>
-                    <Pagination>
-                      <PaginationContent>
-                        <PaginationItem>
-                          <PaginationPrevious />
-                        </PaginationItem>
-
-                        <PaginationItem>
-                          <PaginationNext />
-                        </PaginationItem>
-                      </PaginationContent>
-                    </Pagination>
-                  </CardFooter>
+                  <CardFooter></CardFooter>
                 </Card>
               </TabsContent>
             </Tabs>
@@ -695,15 +696,6 @@ function Home() {
                       >
                         Select
                       </Button>
-                      {/*  <Button
-                        onClick={() => {
-                          setOpenSearchDialog(false);
-                          setCurrentBreed(breed.id);
-                          refetch();
-                        }}
-                      >
-                        Select
-                      </Button> */}
                     </CommandItem>
                   );
                 })
