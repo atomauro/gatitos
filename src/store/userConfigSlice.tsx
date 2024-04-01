@@ -1,9 +1,9 @@
-import { UserInformation } from "@/models/models";
+import { Gatito, UserInformation } from "@/models/models";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: {} as UserInformation,
-  gatitosFavoriteList: [],
+  gatitosFavoriteList: [] as Gatito[],
 };
 
 const userConfigSlice = createSlice({
@@ -18,7 +18,7 @@ const userConfigSlice = createSlice({
       state.user = initialState.user;
     },
     setGatitosFavorites(state, { payload }) {
-      state.gatitosFavoriteList = payload;
+      state.gatitosFavoriteList = [...state.gatitosFavoriteList, ...payload];
     },
     resetAllGatitosFavorites(state) {
       state.gatitosFavoriteList = [];
