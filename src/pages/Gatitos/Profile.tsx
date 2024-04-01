@@ -76,7 +76,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
 import { useEffect } from "react";
-import { resetUser } from "@/store/userConfigSlice";
+import { resetAllGatitosFavorites, resetUser } from "@/store/userConfigSlice";
+import { resetAllGatitos } from "@/store/gatitosConfigSlice";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -92,6 +93,8 @@ function Profile() {
   }, [dispatch, userConfig, navigate, user]);
 
   function logoutUser() {
+    dispatch(resetAllGatitosFavorites());
+    dispatch(resetAllGatitos());
     dispatch(resetUser());
   }
 

@@ -6,6 +6,7 @@ import {
   CreditCard,
   File,
   Heart,
+  HeartIcon,
   Home as HomeIcon,
   LineChart,
   ListFilter,
@@ -109,6 +110,9 @@ function Home() {
   const gatitosList = useSelector(
     (state: IRootState) => state.gatitosConfig.gatitosList
   );
+  const gatitosFavoriteList = useSelector(
+    (state: IRootState) => state.userConfig.gatitosFavoriteList
+  );
 
   async function fetchGatitos() {
     /* const res = await fetch(
@@ -145,14 +149,26 @@ function Home() {
   }, [dispatch, userConfig, navigate]);
 
   function logoutUser() {
-    dispatch(resetAllGatitosFavorites());
     dispatch(resetAllGatitos());
+    dispatch(resetAllGatitosFavorites());
     dispatch(resetUser());
   }
 
   function addToFavorites(gatitoToAdd: Gatito) {
-    console.log("addToFavorites", gatitoToAdd);
+    console.log("addToFavorites", { gatitoToAdd, gatitosFavoriteList });
     dispatch(setGatitosFavorites(gatitoToAdd));
+  }
+
+  function checkIfFavorite(gatitoToCheck: Gatito) {
+    if (gatitosFavoriteList.length > 0) {
+      const foundGatito = gatitosFavoriteList.find(
+        (gatito: Gatito) => gatito.id === gatitoToCheck.id
+      );
+      if (foundGatito) {
+        return true;
+      }
+    }
+    return false;
   }
 
   return (
@@ -283,13 +299,13 @@ function Home() {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <NavLink to="#">Dashboard</NavLink>
+                  <NavLink to="/gatitos">Dashboard</NavLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <NavLink to="#">Gatitos</NavLink>
+                  <NavLink to="/gatitos">Gatitos</NavLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -364,7 +380,9 @@ function Home() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardDescription>Your Favorites</CardDescription>
-                  <CardTitle className="text-3xl">0</CardTitle>
+                  <CardTitle className="text-3xl">
+                    {gatitosFavoriteList.length}
+                  </CardTitle>
                 </CardHeader>
               </Card>
             </div>
@@ -380,8 +398,8 @@ function Home() {
                   <CardHeader className="px-7">
                     <CardTitle>Gatitos</CardTitle>
                     <CardDescription>
-                      Recent Gatitos from your internet. Soon we will have memes
-                      too, stay tune!
+                      Recent Gatitos your internet. Soon we will have memes too,
+                      stay tune!
                       <div className="flex flex-column">
                         <div className="ml-auto flex items-center gap-2">
                           <Select
@@ -528,7 +546,17 @@ function Home() {
                                       }}
                                     >
                                       Add to favorites{" "}
-                                      <Heart className="h-6 w-6" />
+                                      <HeartIcon
+                                        className="h-6 w-6 ml-2 "
+                                        color={
+                                          checkIfFavorite(gatito)
+                                            ? "red"
+                                            : "white"
+                                        }
+                                        fill={
+                                          checkIfFavorite(gatito) ? "red" : ""
+                                        }
+                                      />
                                     </Button>
                                   </div>
                                 </CardContent>
@@ -542,24 +570,89 @@ function Home() {
                     <Pagination>
                       <PaginationContent>
                         <PaginationItem>
-                          <PaginationPrevious href="#" />
+                          <PaginationPrevious />
                         </PaginationItem>
+
                         <PaginationItem>
-                          <PaginationLink href="#">1</PaginationLink>
+                          <PaginationNext />
                         </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+              <TabsContent value="favorites">
+                <Card>
+                  <CardHeader className="px-7">
+                    <CardTitle>Look at these beautiful gatitos!</CardTitle>
+                    <CardDescription>
+                      They are not just simple animals, they are gods.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {gatitosFavoriteList.length > 0
+                        ? gatitosFavoriteList.map((gatito: Gatito) => {
+                            return (
+                              <Card
+                                className="relative group overflow-hidden transform transition-transform duration-300 hover:scale-125 hover:shadow-2lg"
+                                key={gatito.id}
+                              >
+                                <CardContent className="group-hover:opacity-75 relative">
+                                  <img
+                                    src={gatito.url}
+                                    alt="Gatito"
+                                    className="block w-full h-48 object-cover"
+                                  />
+                                  <div className="absolute bottom-4 ">
+                                    <Button
+                                      variant={"default"}
+                                      className=" mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                      onClick={() => {
+                                        navigate(
+                                          "/gatitos/detail/" + gatito.id
+                                        );
+                                      }}
+                                    >
+                                      See Details
+                                    </Button>
+                                    <Button
+                                      variant={"secondary"}
+                                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                      onClick={() => {
+                                        addToFavorites(gatito);
+                                      }}
+                                    >
+                                      Add to favorites{" "}
+                                      <HeartIcon
+                                        className="h-6 w-6 ml-2 "
+                                        color={
+                                          checkIfFavorite(gatito)
+                                            ? "red"
+                                            : "white"
+                                        }
+                                        fill={
+                                          checkIfFavorite(gatito) ? "red" : ""
+                                        }
+                                      />
+                                    </Button>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            );
+                          })
+                        : null}
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Pagination>
+                      <PaginationContent>
                         <PaginationItem>
-                          <PaginationLink href="#" isActive>
-                            2
-                          </PaginationLink>
+                          <PaginationPrevious />
                         </PaginationItem>
+
                         <PaginationItem>
-                          <PaginationLink href="#">3</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationNext href="#" />
+                          <PaginationNext />
                         </PaginationItem>
                       </PaginationContent>
                     </Pagination>

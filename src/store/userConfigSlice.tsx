@@ -18,8 +18,20 @@ const userConfigSlice = createSlice({
       state.user = initialState.user;
     },
     setGatitosFavorites(state, { payload }) {
-      state.gatitosFavoriteList = [...state.gatitosFavoriteList, ...payload];
+      // Verificamos si el gatito ya está en la lista
+      const existingIndex = state.gatitosFavoriteList.findIndex(
+        (item) => item.id === payload.id
+      );
+
+      // Si el gatito no existe en la lista, lo agregamos
+      if (existingIndex === -1) {
+        state.gatitosFavoriteList.push(payload);
+      } else {
+        // Si el gatito ya existe en la lista, lo eliminamos
+        state.gatitosFavoriteList.splice(existingIndex, 1);
+      }
     },
+
     resetAllGatitosFavorites(state) {
       state.gatitosFavoriteList = [];
     },

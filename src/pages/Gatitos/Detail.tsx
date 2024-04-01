@@ -1,4 +1,5 @@
 import {
+  ArrowLeftCircleIcon,
   CatIcon,
   ChevronLeft,
   ChevronRight,
@@ -78,8 +79,13 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
 import { useEffect, useState } from "react";
-import { resetUser } from "@/store/userConfigSlice";
+import {
+  resetAllGatitosFavorites,
+  resetUser,
+  setGatitosFavorites,
+} from "@/store/userConfigSlice";
 import { Gatito } from "@/models/models";
+import { resetAllGatitos } from "@/store/gatitosConfigSlice";
 
 function Detail() {
   const dispatch = useDispatch();
@@ -88,7 +94,10 @@ function Detail() {
 
   const userConfig = useSelector((state: IRootState) => state.userConfig);
   const gatitosList = useSelector(
-    (state: IRootState) => state.gatitosConfig?.gatitosList
+    (state: IRootState) => state.gatitosConfig.gatitosList
+  );
+  const gatitosFavoriteList = useSelector(
+    (state: IRootState) => state.userConfig.gatitosFavoriteList
   );
 
   const { id } = useParams();
@@ -109,7 +118,26 @@ function Detail() {
   }, [dispatch, userConfig, navigate]);
 
   function logoutUser() {
+    dispatch(resetAllGatitos());
+    dispatch(resetAllGatitosFavorites());
     dispatch(resetUser());
+  }
+
+  function addToFavorites(gatitoToAdd: Gatito) {
+    console.log("addToFavorites", { gatitoToAdd, gatitosFavoriteList });
+    dispatch(setGatitosFavorites(gatitoToAdd));
+  }
+
+  function checkIfFavorite(gatitoToCheck: Gatito) {
+    if (gatitosFavoriteList.length > 0 && currentGatito) {
+      const foundGatito = gatitosFavoriteList.find(
+        (gatito: Gatito) => gatito.id === gatitoToCheck.id
+      );
+      if (foundGatito) {
+        return true;
+      }
+    }
+    return false;
   }
 
   return (
@@ -285,7 +313,17 @@ function Detail() {
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <div>
               <Card>
-                <CardHeader className="pb-5">Gatito Details</CardHeader>
+                <CardHeader className="pb-5 flex flex-row items-center">
+                  <Button
+                    variant={"outline"}
+                    className="flex justify-between items-center"
+                    onClick={() => navigate("/gatitos")}
+                  >
+                    <ArrowLeftCircleIcon />
+                    <span>Back</span>
+                  </Button>
+                  <CardTitle className="ml-8"> Gatito Details</CardTitle>
+                </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-center">
                     <img
@@ -300,23 +338,37 @@ function Detail() {
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               <Card className="sm:col-span-2">
                 <CardHeader className="pb-5">
-                  <CardTitle>Random Gatito Breed: </CardTitle>
+                  <CardTitle>Description</CardTitle>
                   <CardDescription className="max-w-lg text-balance leading-relaxed">
-                    Introducing Gatitos App by{" "}
+                    {currentGatito?.breeds[0]?.description}
                   </CardDescription>
                 </CardHeader>
               </Card>
               <Card>
                 <CardHeader className="pb-2">
-                  <CardDescription>All Beauties</CardDescription>
-                  <CardTitle className="text-4xl">1329</CardTitle>
+                  <CardDescription>Breed</CardDescription>
+                  <CardTitle className="text-4xl">
+                    {" "}
+                    {currentGatito?.breeds[0]?.name}
+                  </CardTitle>
                 </CardHeader>
               </Card>
               <Card>
                 <CardHeader className="pb-2">
                   <CardDescription>Make Favorite</CardDescription>
                   <CardContent className="flex items-center justify-center">
-                    <Heart className="h-11 w-11" />
+                    <Heart
+                      className="h-11 w-11"
+                      color={
+                        checkIfFavorite(currentGatito as Gatito)
+                          ? "red"
+                          : "white"
+                      }
+                      fill={
+                        checkIfFavorite(currentGatito as Gatito) ? "red" : ""
+                      }
+                      onClick={() => addToFavorites(currentGatito as Gatito)}
+                    />
                   </CardContent>
                 </CardHeader>
               </Card>
@@ -327,17 +379,9 @@ function Detail() {
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
-                    Order ID: Oe31b70H
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                    >
-                      <Copy className="h-3 w-3" />
-                      <span className="sr-only">Copy Order ID</span>
-                    </Button>
+                    Gatito ID
                   </CardTitle>
-                  <CardDescription>Date: November 23, 2023</CardDescription>
+                  <CardDescription>{currentGatito?.id}</CardDescription>
                 </div>
                 <div className="ml-auto flex items-center gap-1">
                   <Button size="sm" variant="outline" className="h-8 gap-1">
@@ -350,37 +394,107 @@ function Detail() {
               </CardHeader>
               <CardContent className="p-6 text-sm">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-3">
-                    <div className="font-semibold">Shipping Information</div>
-                    <address className="grid gap-0.5 not-italic text-muted-foreground">
-                      <span>Liam Johnson</span>
-                    </address>
-                  </div>
-                  <div className="grid auto-rows-max gap-3">
-                    <div className="font-semibold">Billing Information</div>
-                    <div className="text-muted-foreground">
-                      Same as shipping address
+                  <div className="font-semibold">Gatito Information</div>
+                  <dl className="grid gap-3">
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Width (mm)</dt>
+                      <dd>{currentGatito?.width}</dd>
                     </div>
-                  </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Height (mm)</dt>
+                      <dd>
+                        <a href="mailto:">{currentGatito?.height}</a>
+                      </dd>
+                    </div>
+                  </dl>
                 </div>
                 <Separator className="my-4" />
                 <div className="grid gap-3">
-                  <div className="font-semibold">Customer Information</div>
+                  <div className="font-semibold">Breed Information</div>
                   <dl className="grid gap-3">
                     <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Customer</dt>
-                      <dd>Liam Johnson</dd>
+                      <dt className="text-muted-foreground">Breed Name</dt>
+                      <dd>{currentGatito?.breeds[0].name}</dd>
                     </div>
                     <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Email</dt>
-                      <dd>
-                        <a href="mailto:">liam@acme.com</a>
+                      <dt className="text-muted-foreground">Temperament</dt>
+                      <dd className="text-right">
+                        {currentGatito?.breeds[0].temperament}
                       </dd>
                     </div>
                     <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Phone</dt>
+                      <dt className="text-muted-foreground">Origin</dt>
+                      <dd>{currentGatito?.breeds[0].origin}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Country Code</dt>
+                      <dd>{currentGatito?.breeds[0].country_code}</dd>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Life Span</dt>
+                      <dd>{currentGatito?.breeds[0].life_span}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Adaptability</dt>
+                      <dd>{currentGatito?.breeds[0].adaptability}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Affection Level</dt>
+                      <dd>{currentGatito?.breeds[0].affection_level}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Child Friendly</dt>
+                      <dd>{currentGatito?.breeds[0].child_friendly}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Dog Friendly</dt>
+                      <dd>{currentGatito?.breeds[0].dog_friendly}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Energy Level</dt>
+                      <dd>{currentGatito?.breeds[0].energy_level}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Grooming</dt>
+                      <dd>{currentGatito?.breeds[0].grooming}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Health Issues</dt>
+                      <dd>{currentGatito?.breeds[0].health_issues}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Intelligence</dt>
+                      <dd>{currentGatito?.breeds[0].intelligence}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Shedding Level</dt>
+                      <dd>{currentGatito?.breeds[0].shedding_level}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Social Needs</dt>
+                      <dd>{currentGatito?.breeds[0].social_needs}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">
+                        Stranger Friendly
+                      </dt>
+                      <dd>{currentGatito?.breeds[0].stranger_friendly}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Vocalisation</dt>
+                      <dd>{currentGatito?.breeds[0].vocalisation}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Wikipedia URL</dt>
                       <dd>
-                        <a href="tel:">+1 234 567 890</a>
+                        <a
+                          href={currentGatito?.breeds[0].wikipedia_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {currentGatito?.breeds[0].wikipedia_url}
+                        </a>
                       </dd>
                     </div>
                   </dl>
