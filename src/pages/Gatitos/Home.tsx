@@ -83,6 +83,7 @@ import { Separator } from "@/components/ui/separator";
 import { breedsCurrentOptions } from "@/models/Gatito/breedsCurrentOptions";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -108,6 +109,7 @@ function Home() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
+  const [openAuthorGatitosDialog, setOpenAuthorGatitosDialog] = useState(false);
 
   const gatitosList = useSelector(
     (state: IRootState) => state.gatitosConfig.gatitosList
@@ -127,7 +129,7 @@ function Home() {
     return res.json();
   }
 
-  const { data, status, refetch, isLoading } = useQuery({
+  const { data, status, refetch, isFetching } = useQuery({
     queryKey: ["gatitos"],
     queryFn: fetchGatitos,
   });
@@ -703,7 +705,7 @@ function Home() {
           </CommandGroup>
         </CommandList>
       </CommandDialog>
-      <AlertDialog open={isLoading}>
+      <AlertDialog open={isFetching}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Loading cuteness!</AlertDialogTitle>
@@ -730,6 +732,77 @@ function Home() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <AlertDialog open={openAuthorGatitosDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>See Author Gatitos!</AlertDialogTitle>
+            <AlertDialogDescription>
+              <div className="flex flex-col items-center">
+                <div className="flex flex-row gap-8 md:gap-12 lg:gap-20">
+                  <div className="text-center">
+                    <div className="rounded-full overflow-hidden w-20 h-20 md:w-40 md:h-40">
+                      <img
+                        src="/coco.png"
+                        className="w-full h-full object-cover"
+                        alt="Cocoliso"
+                      />
+                    </div>
+                    <span>Cocoliso</span>
+                  </div>
+                  <div className="text-center">
+                    <div className="rounded-full overflow-hidden w-20 h-20 md:w-40 md:h-40">
+                      <img
+                        src="/kakaroto.png"
+                        className="w-full h-full object-cover"
+                        alt="Kakaroto"
+                      />
+                    </div>
+                    <span>Kakaroto</span>
+                  </div>
+                </div>
+                <div className="flex flex-row gap-8 md:gap-12 lg:gap-20 mt-8 md:mt-12 lg:mt-20">
+                  <div className="text-center">
+                    <div className="rounded-full overflow-hidden w-20 h-20 md:w-40 md:h-40">
+                      <img
+                        src="/wevito.png"
+                        className="w-full h-full object-cover"
+                        alt="Atom (Wevito)"
+                      />
+                    </div>
+                    <span>Atom (Wevito)</span>
+                  </div>
+                  <div className="text-center">
+                    <div className="rounded-full overflow-hidden w-20 h-20 md:w-40 md:h-40">
+                      <img
+                        src="/gigi.jpeg"
+                        className="w-full h-full object-cover"
+                        alt="Gigi"
+                      />
+                    </div>
+                    <span>Gigi</span>
+                  </div>
+                </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => setOpenAuthorGatitosDialog(false)}
+            >
+              Close
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <motion.div
+        className="fixed bottom-5 right-5"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+      >
+        <Button onClick={() => setOpenAuthorGatitosDialog(true)}>
+          My Gatitos
+        </Button>
+      </motion.div>{" "}
     </div>
   );
 }

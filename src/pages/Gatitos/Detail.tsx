@@ -105,7 +105,7 @@ function Detail() {
     return data;
   }
 
-  const { data, status, refetch, isLoading } = useQuery({
+  const { data, status, refetch, isFetching } = useQuery({
     queryKey: ["funfacts"],
     queryFn: fetchFunFact,
     enabled: false,
@@ -153,10 +153,6 @@ function Detail() {
       }
     }
     return false;
-  }
-
-  function getFunFact() {
-    console.log("sd");
   }
 
   return (
@@ -525,7 +521,7 @@ function Detail() {
         </main>
       </div>
 
-      <AlertDialog open={isLoading} key={"loader"}>
+      <AlertDialog open={isFetching} key={"loader"}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Loading cuteness!</AlertDialogTitle>

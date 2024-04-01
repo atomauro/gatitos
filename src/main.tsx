@@ -25,7 +25,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Suspense>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/*         <ReactQueryDevtools initialIsOpen={false} />
+         */}{" "}
         <Provider store={store}>
           <App />
         </Provider>
