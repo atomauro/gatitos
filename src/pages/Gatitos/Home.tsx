@@ -135,7 +135,6 @@ function Home() {
   });
 
   useEffect(() => {
-    console.log("RQ", { data, status });
     if (data && status === "success") {
       if (data.length > 0) {
         dispatch(setGatitos(data));
