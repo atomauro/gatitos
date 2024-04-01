@@ -9,6 +9,7 @@ import {
   PanelLeft,
   SmileIcon,
   User,
+  UserIcon,
 } from "lucide-react";
 
 import {
@@ -53,7 +54,7 @@ import {
   resetUser,
   setGatitosFavorites,
 } from "@/store/userConfigSlice";
-import { Gatito } from "@/models/models";
+import { Gatito } from "@/models/Gatito/Gatito";
 import { resetAllGatitos } from "@/store/gatitosConfigSlice";
 
 function Detail() {
@@ -191,20 +192,11 @@ function Detail() {
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
-                <NavLink
-                  to="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </NavLink>
-                <NavLink
-                  to="/gatitos"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <HomeIcon className="h-5 w-5" />
-                  Dashboard
-                </NavLink>
+                <div className="group flex shrink-0 items-center justify-center gap-2 text-lg font-semibold  md:text-base">
+                  <img src="/imagotipo.png" className="h-5" />
+                  <span>Gatitos App</span>
+                </div>
+
                 <NavLink
                   to="/gatitos"
                   className="flex items-center gap-4 px-2.5 text-foreground"
@@ -214,12 +206,20 @@ function Detail() {
                 </NavLink>
 
                 <NavLink
-                  to="#"
+                  to="/profile"
+                  className="flex items-center gap-4 px-2.5 text-foreground"
+                >
+                  <UserIcon className="h-5 w-5" />
+                  Profile
+                </NavLink>
+
+                <span
+                  onClick={() => logoutUser()}
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </NavLink>
+                  <LogOutIcon className="h-5 w-5" />
+                  Logout
+                </span>
               </nav>
             </SheetContent>
           </Sheet>

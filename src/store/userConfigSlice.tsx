@@ -1,4 +1,5 @@
-import { Gatito, UserInformation } from "@/models/models";
+import { Gatito } from "@/models/Gatito/Gatito";
+import { UserInformation } from "@/models/UserInformation/UserInformation";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

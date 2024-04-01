@@ -7,6 +7,7 @@ import {
   Package2,
   PanelLeft,
   User,
+  UserIcon,
 } from "lucide-react";
 
 import {
@@ -147,20 +148,11 @@ function Profile() {
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
-                <NavLink
-                  to="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </NavLink>
-                <NavLink
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <HomeIcon className="h-5 w-5" />
-                  Dashboard
-                </NavLink>
+                <div className="group flex shrink-0 items-center justify-center gap-2 text-lg font-semibold  md:text-base">
+                  <img src="/imagotipo.png" className="h-5" />
+                  <span>Gatitos App</span>
+                </div>
+
                 <NavLink
                   to="/gatitos"
                   className="flex items-center gap-4 px-2.5 text-foreground"
@@ -170,12 +162,20 @@ function Profile() {
                 </NavLink>
 
                 <NavLink
-                  to="#"
+                  to="/profile"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                >
+                  <UserIcon className="h-5 w-5" />
+                  Profile
+                </NavLink>
+
+                <span
+                  onClick={() => logoutUser()}
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <LogOutIcon className="h-5 w-5" />
                   Logout
-                </NavLink>
+                </span>
               </nav>
             </SheetContent>
           </Sheet>
@@ -183,13 +183,13 @@ function Profile() {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <NavLink to="#">Dashboard</NavLink>
+                  <NavLink to="/gatitos">Dashboard</NavLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <NavLink to="#">Gatitos</NavLink>
+                  <NavLink to="/gatitos">Gatitos</NavLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />

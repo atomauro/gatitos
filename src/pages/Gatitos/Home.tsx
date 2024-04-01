@@ -10,6 +10,7 @@ import {
   PanelLeft,
   Search,
   User,
+  UserIcon,
   Users2,
 } from "lucide-react";
 
@@ -73,10 +74,9 @@ import { KeyboardEvent, useEffect, useState } from "react";
 import { IRootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { resetAllGatitos, setGatitos } from "@/store/gatitosConfigSlice";
-import { Gatito } from "@/models/models";
+import { Breed, Gatito } from "@/models/Gatito/Gatito";
 
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -87,6 +87,8 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { Separator } from "@/components/ui/separator";
+import { breedsCurrentOptions } from "@/models/Gatito/breedsCurrentOptions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 function Home() {
   const dispatch = useDispatch();
@@ -252,48 +254,32 @@ function Home() {
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
+                <div className="group flex shrink-0 items-center justify-center gap-2 text-lg font-semibold  md:text-base">
+                  <img src="/imagotipo.png" className="h-5" />
+                  <span>Gatitos App</span>
+                </div>
+
                 <NavLink
-                  to="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </NavLink>
-                <NavLink
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <HomeIcon className="h-5 w-5" />
-                  Dashboard
-                </NavLink>
-                <NavLink
-                  to="#"
+                  to="/gatitos"
                   className="flex items-center gap-4 px-2.5 text-foreground"
                 >
                   <CatIcon className="h-5 w-5" />
                   Gatitos
                 </NavLink>
                 <NavLink
-                  to="#"
+                  to="/profile"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
-                  <Package className="h-5 w-5" />
-                  Products
+                  <UserIcon className="h-5 w-5" />
+                  Profile
                 </NavLink>
-                <NavLink
-                  to="#"
+                <span
+                  onClick={() => logoutUser()}
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </NavLink>
-                <NavLink
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </NavLink>
+                  <LogOutIcon className="h-5 w-5" />
+                  Logout
+                </span>
               </nav>
             </SheetContent>
           </Sheet>
@@ -681,18 +667,31 @@ function Home() {
             <Button
               onClick={() => window.open("https://www.57blocks.io", "_blank")}
             >
-              <span
-                onClick={() => window.open("https://www.57blocks.io", "_blank")}
-              >
-                Visit website
-              </span>
+              <span>Visit website</span>
             </Button>
           </CommandEmpty>
           <CommandGroup heading="Suggestions">
-            <CommandItem>
-              <CatIcon className="mr-2 h-4 w-4" />
-              <span>Breed</span>
-            </CommandItem>
+            <ScrollArea>
+              {breedsCurrentOptions
+                ? breedsCurrentOptions.map((breed: Breed) => {
+                    return (
+                      <CommandItem key={breed.id}>
+                        <CatIcon className="mr-2 h-4 w-4" />
+                        <span>{breed.name}</span>
+                        {/*  <Button
+                        onClick={() => {
+                          setOpenSearchDialog(false);
+                          setCurrentBreed(breed.id);
+                          refetch();
+                        }}
+                      >
+                        Select
+                      </Button> */}
+                      </CommandItem>
+                    );
+                  })
+                : null}
+            </ScrollArea>
           </CommandGroup>
         </CommandList>
       </CommandDialog>

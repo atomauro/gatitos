@@ -3,14 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NavLink, useNavigate } from "react-router-dom";
 import Lottie from "react-lottie";
-import animationNyanCat from "./nyan.json";
+import animationNyanCat from "@/assets/animations/nyan.json";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { setUser } from "@/store/userConfigSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
 import { useEffect } from "react";
-import { UserInformation } from "@/models/models";
 import {
   generateRandomAddress,
   generateRandomCardNumber,
@@ -20,7 +19,7 @@ import {
   generateRandomState,
   generateRandomUsername,
   generateRandomZipCode,
-} from "./randomDataGenerator";
+} from "../../models/randomUserGenerator";
 
 const optionsNyanCatAnimation = {
   loop: true,
