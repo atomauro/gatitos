@@ -2,6 +2,7 @@ import {
   CatIcon,
   HeartIcon,
   Home as HomeIcon,
+  Lightbulb,
   LineChart,
   LogOutIcon,
   Package,
@@ -68,11 +69,24 @@ import {
   resetUser,
   setGatitosFavorites,
 } from "@/store/userConfigSlice";
-import { useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { IRootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { resetAllGatitos, setGatitos } from "@/store/gatitosConfigSlice";
 import { Gatito } from "@/models/models";
+
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+import { Separator } from "@/components/ui/separator";
 
 function Home() {
   const dispatch = useDispatch();
@@ -81,6 +95,9 @@ function Home() {
   const userConfig = useSelector((state: IRootState) => state.userConfig);
   const gatitosConfig = useSelector((state: IRootState) => state.gatitosConfig);
   const [currentBreed, setCurrentBreed] = useState("snow");
+
+  const [openSearchDialog, setOpenSearchDialog] = useState(false);
+
   const gatitosList = useSelector(
     (state: IRootState) => state.gatitosConfig.gatitosList
   );
@@ -121,6 +138,17 @@ function Home() {
       navigate("/");
     }
   }, [dispatch, userConfig, navigate]);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpenSearchDialog((openSearchDialog) => !openSearchDialog);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   function logoutUser() {
     dispatch(resetAllGatitos());
@@ -288,14 +316,17 @@ function Home() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
+          <div className="relative ml-auto flex-1 md:grow-0  flex jusfiy-between items-center">
+            <Button
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+              onClick={() => setOpenSearchDialog(true)}
+            >
+              <Search color="white" className="absolute left-2.5 h-4 w-4" />
+              <span className="text-white text-center ml-4">Search</span>
+              <CommandShortcut>⌘K</CommandShortcut>
+            </Button>
           </div>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -637,6 +668,34 @@ function Home() {
           </div>
         </main>
       </div>
+      <CommandDialog open={openSearchDialog} onOpenChange={setOpenSearchDialog}>
+        <CommandInput placeholder="Type a breed to search..." />
+        <CommandList>
+          <CommandEmpty>
+            <span>No results found.</span>
+            <Separator className="text-center mb-5 mt-5" />
+            <div className="flex items-center flex-row justify-center mt-4 mb-4">
+              <Lightbulb className="mr-2 h-4 w-4" />
+              <span>About 57Blocks?</span>
+            </div>
+            <Button
+              onClick={() => window.open("https://www.57blocks.io", "_blank")}
+            >
+              <span
+                onClick={() => window.open("https://www.57blocks.io", "_blank")}
+              >
+                Visit website
+              </span>
+            </Button>
+          </CommandEmpty>
+          <CommandGroup heading="Suggestions">
+            <CommandItem>
+              <CatIcon className="mr-2 h-4 w-4" />
+              <span>Breed</span>
+            </CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
     </div>
   );
 }
