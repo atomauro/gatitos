@@ -88,6 +88,23 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { breedsCurrentOptions } from "@/models/Gatito/breedsCurrentOptions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import animationLoaderCat from "@/assets/animations/loadercat.json";
+import Lottie from "react-lottie";
+
+const optionsLoaderAnimation = {
+  loop: true,
+  autoplay: true,
+  animationData: animationLoaderCat,
+};
 
 function Home() {
   const dispatch = useDispatch();
@@ -704,6 +721,24 @@ function Home() {
           </CommandGroup>
         </CommandList>
       </CommandDialog>
+      <AlertDialog open={status == "pending"}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Loading cuteness!</AlertDialogTitle>
+            <AlertDialogDescription>
+              <Lottie
+                options={optionsLoaderAnimation}
+                speed={1}
+                width={"100%"}
+                isClickToPauseDisabled={true}
+              />
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <span>sad</span>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
